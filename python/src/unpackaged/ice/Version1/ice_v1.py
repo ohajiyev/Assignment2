@@ -32,45 +32,6 @@ import csv
 
 
 #==============================================================================
-# Function definitions
-
-def draw_environment(environment):
-    """
-    Draw environment
-
-    Arguments:
-    environment -- list variable contains the data of iceberg environment
-                   (no default)
-
-    Returns:
-    Plot of environment variable.
-    """
-    matplotlib.pyplot.xlim(0, 299)
-    matplotlib.pyplot.ylim(0, 299)
-    matplotlib.pyplot.imshow(environment)
-    matplotlib.pyplot.show()
-    
-
-    
-def read_file(file_name, environment):    
-    # Check, try and read the input files
-    try:
-        with open(file_name, 'r') as file_object:
-            # Read input file values and assign into environment variable
-            for data_row in file_object:
-                row_list = []
-                for single_value in data_row.split(","):
-                    row_list.append(int(single_value))
-                environment.append(row_list)       
-    except IOError as err:
-        print(err)
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-
-# End of Function definitions
-#==============================================================================
-
-#==============================================================================
 # Iceberg class definition. 
 
 class Iceberg():    
@@ -85,6 +46,7 @@ class Iceberg():
         self._total_height_above_sea = 0
         self.radar_data_texture = radar_data_texture
         self.lidar_data_height = lidar_data_height
+        self.berg_pullable = False
         
         self.calc_ice()
         
@@ -172,6 +134,46 @@ class Iceberg():
                         self._total_mass_above_sea)
         
 # End of Iceberg class definition
+#==============================================================================
+
+
+#==============================================================================
+# Function definitions
+
+def draw_environment(environment):
+    """
+    Draw environment
+
+    Arguments:
+    environment -- list variable contains the data of iceberg environment
+                   (no default)
+
+    Returns:
+    Plot of environment variable.
+    """
+    matplotlib.pyplot.xlim(0, 299)
+    matplotlib.pyplot.ylim(0, 299)
+    matplotlib.pyplot.imshow(environment)
+    matplotlib.pyplot.show()
+    
+
+    
+def read_file(file_name, environment):    
+    # Check, try and read the input files
+    try:
+        with open(file_name, 'r') as file_object:
+            # Read input file values and assign into environment variable
+            for data_row in file_object:
+                row_list = []
+                for single_value in data_row.split(","):
+                    row_list.append(int(single_value))
+                environment.append(row_list)       
+    except IOError as err:
+        print(err)
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+
+# End of Function definitions
 #==============================================================================
 
 
