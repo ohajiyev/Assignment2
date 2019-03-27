@@ -5,7 +5,7 @@ Title: Assignment 2. Module GEOG5991M
        White Star Line Project
 
 Version: 1.0
-The version was built to analysis SINGLE iceberg images 
+The version was built to analyse SINGLE iceberg images 
        
 Link to Github: https://github.com/ohajiyev/Assignment2
     
@@ -38,10 +38,10 @@ License link: https://github.com/ohajiyev/Assignment2/blob/master/LICENSE.md
 # Import modules
 
 import sys
-import operator
-import matplotlib.pyplot
-import matplotlib.animation
-import csv
+import matplotlib.pyplot as plt
+from matplotlib import colors
+import matplotlib.patches as mpatches
+import numpy as np
 #%matplotlib qt
 
 # End of Import modules
@@ -59,8 +59,8 @@ class Iceberg():
         self._total_volume_above_sea = 0 # m3
         self._total_area = 0 # m2
         self._total_area_above_sea = 0 # m2
-#        self._total_height = 0 # m
-#        self._total_height_above_sea = 0 # m
+        #self._total_height = 0 # m
+        #self._total_height_above_sea = 0 # m
         self.radar_data_texture = radar_data_texture
         self.lidar_data_height = lidar_data_height
         self._pullable_threshold = 36000000 # kg
@@ -211,6 +211,64 @@ class Iceberg():
 
 #==============================================================================
 # Function definitions
+                
+                
+def draw_result(image, icebergs):
+                    
+    #!!!!!!!! The following resources were used in the creation of the method 
+    # https://stackoverflow.com/questions/25482876/how-to-add-legend-to-imshow-
+    # in-matplotlib
+    # https://stackoverflow.com/questions/9707676/defining-a-discrete-colormap-
+    # for-imshow-in-matplotlib/9708079
+    #!!!!!!!! Start of the method
+    
+    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
+    # the iceberg
+    ice_data = (image >= 100).astype(np.int)
+    
+    # Get the unique values from data. In this case it will be 0 and 1
+    values = np.unique(ice_data.ravel())
+    
+    # Create the dictionary of unique values
+    value_description = {0: 'Sea level', 1: 'Iceberg'}
+    
+    # Create two plot area, one for image visualisation and the second will
+    # be used for showing the result text
+    fig, ax = plt.subplots(1, 2, figsize=(8,4), sharey=True)
+        
+    # Make a color map of fixed colors, blue for the sea and grey for 
+    # the iceberg
+    cmap = colors.ListedColormap(['blue', 'grey'])
+    bounds=[0,0.5,1]
+    norm = colors.BoundaryNorm(bounds, cmap.N)
+    
+    # Plot image with predefined colors
+    im = ax[0].imshow(ice_data, interpolation='none', cmap=cmap, norm=norm)
+    
+    # Identify the colors from the plot. In this case it is ['blue', 'grey']
+    colors_image = [ im.cmap(im.norm(value)) for value in values]
+    
+    # Create a patch for every color 
+    patches = [mpatches.Patch(color=colors_image[i], label="{}".
+                    format(value_description[i]) ) for i in range(len(values))]
+    
+    # Put those patched as legend-handles into the legend
+    ax[0].legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, 
+      borderaxespad=0.)
+    
+    ax[0].set_title('Iceberg')
+    
+    ax[1].text(0, 100, 'Results of image analysis of berg', bbox={'facecolor': 
+        'white', 'pad': 10})
+    
+    ax[1].text(0, 270, str(icebergs[0]), bbox={'facecolor': 'white', 
+      'pad': 10})
+    
+    ax[1].axis('off')
+    
+    plt.show()
+    
+    #!!!!!!!! End of the method
 
 def draw_environment(environment):
     """
@@ -223,30 +281,25 @@ def draw_environment(environment):
     Returns:
     Plot of environment variable.
     """
-    matplotlib.pyplot.xlim(0, 299)
-    matplotlib.pyplot.ylim(0, 299)
-    matplotlib.pyplot.imshow(environment)
-    matplotlib.pyplot.show()
+    plt.xlim(0, 299)
+    plt.ylim(299, 0)
+    plt.imshow(environment)
+    plt.show()
     
-
-    
-def read_file(file_name, environment):    
-    # Check, try and read the input files
+def read_file(file_name):    
+    # Try to read the input files
+    # Note: assigning new value to environment variable make it local,
+    # so return function was used
     try:
-        with open(file_name, 'r') as file_object:
-            # Read input file values and assign into environment variable
-            for data_row in file_object:
-                row_list = []
-                for single_value in data_row.split(","):
-                    row_list.append(int(single_value))
-                environment.append(row_list)       
+        environment = np.loadtxt(file_name, delimiter = (','))
+        return environment     
     except IOError as err:
         print(err)
     except:
         print("Unexpected error:", sys.exc_info()[0])
         
 def write_file(file_name, result_text):    
-    # Check, try and write result to the output file
+    # Try to write the result to the output file
     try:
         with open(file_name, 'w') as file_object:
             file_object.write(result_text)      
@@ -282,16 +335,19 @@ output_file_path = 'output/results.txt'
 # End of Create variables
 #==============================================================================
 
-read_file(lidar_data_file_path, lidar_data_height)
-read_file(radar_data_file_path, radar_data_texture)
+# Read input files and assign texture and height info to the variables
+lidar_data_height = read_file(lidar_data_file_path)
+radar_data_texture = read_file(radar_data_file_path)
     
-draw_environment(radar_data_texture)
-draw_environment(lidar_data_height)
+# Draw input image data
+#draw_environment(radar_data_texture)
+#draw_environment(lidar_data_height)
 
+# Create the Iceberg object from the input  image files
 icebergs.append(Iceberg(radar_data_texture, lidar_data_height))
 
-print(icebergs[0])
+# Draw result in the canvas
+draw_result(radar_data_texture, icebergs)
 
+# Write the results of the analysis to text file
 write_file(output_file_path, str(icebergs[0]))
-
-#calc_ice(radar_data_texture, lidar_data_height)

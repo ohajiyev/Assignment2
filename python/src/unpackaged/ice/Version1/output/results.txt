@@ -1,7 +1,7 @@
-Total area: 10829 sq.m.                
-Total area above sea: 10829 sq.m.                
-Total volume: 156744.0 m3                
-Total volume above sea: 156744.0 m3                
-Total mass: 141069600.0 kg                
-Total mass above sea: 141069600.0 kg                
-Tug cannot pull the berg
+Total area: 961 sq.m.                
+Total area above sea: 961 sq.m.                
+Total volume: 14415.5 m3                
+Total volume above sea: 14415.5 m3                
+Total mass: 12973950.0 kg                
+Total mass above sea: 12973950.0 kg                
+Tug can pull the berg
