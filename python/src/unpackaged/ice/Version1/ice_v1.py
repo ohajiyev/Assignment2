@@ -169,18 +169,21 @@ class Iceberg():
         Calculate the total mass above sea, tha volume of the iceberg
     
         """
-        cell_area = 1 # 
-        for y in range(299):
-            for x in range(299):
-                if self.radar_data_texture[x][y] >= 100:
+        x_len, y_len = self.lidar_data_height.shape
+        
+        cell_area = 1 # define default cell area = 1 sq.m.
+        
+        for y in range(y_len):
+            for x in range(x_len):
+                if self.radar_data_texture[y][x] >= 100:
                     self._total_area += 1
-                    self._total_volume += self.lidar_data_height[x][y] / 10 \
+                    self._total_volume += self.lidar_data_height[y][x] / 10 \
                                             * cell_area
                     
-                    if self.lidar_data_height[x][y] > 0:
+                    if self.lidar_data_height[y][x] > 0:
                         self._total_area_above_sea += 1
                         self._total_volume_above_sea += \
-                                            self.lidar_data_height[x][y] / 10
+                                            self.lidar_data_height[y][x] / 10
                                             
         if (self._total_area_above_sea / self._total_area) * 100 >= 10:
             self._total_mass = 900 * self._total_volume 
