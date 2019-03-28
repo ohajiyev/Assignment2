@@ -42,174 +42,13 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import matplotlib.patches as mpatches
 import numpy as np
+import icebergstructure
 #%matplotlib qt
 
 # End of Import modules
 #==============================================================================
 
 
-#==============================================================================
-# Iceberg class definition. 
-
-class Iceberg():    
-    def __init__ (self, radar_data_texture, lidar_data_height):
-        self._total_mass = 0 # kg
-        self._total_mass_above_sea = 0 # kg
-        self._total_volume = 0 # m3
-        self._total_volume_above_sea = 0 # m3
-        self._total_area = 0 # m2
-        self._total_area_above_sea = 0 # m2
-        #self._total_height = 0 # m
-        #self._total_height_above_sea = 0 # m
-        self.radar_data_texture = radar_data_texture
-        self.lidar_data_height = lidar_data_height
-        self._pullable_threshold = 36000000 # kg
-        self._berg_pullable = False
-        
-        self.calc_iceberg_params()
-        
-    # Set the property of the private variables to use Incapsulation
-    ###########################################################################
-    
-    @property
-    def total_mass(self):
-        """Get the 'total_mass' property."""
-        return self._total_mass
-
-    @total_mass.setter
-    def total_mass(self, value):
-        """Set the 'total_mass' property."""
-        self._total_mass = round(value, 1)
-
-    @total_mass.deleter
-    def total_mass(self):
-        """Delete the 'total_mass' property."""
-        del self._total_mass    
-
-    @property
-    def total_mass_above_sea(self):
-        """Get the 'total_mass_above_sea' property."""
-        return self._total_mass_above_sea
-
-    @total_mass_above_sea.setter
-    def total_mass_above_sea(self, value):
-        """Set the 'total_mass_above_sea' property."""
-        self._total_mass_above_sea = round(value, 1)
-
-    @total_mass_above_sea.deleter
-    def total_mass_above_sea(self):
-        """Delete the 'total_mass_above_sea' property."""
-        del self._total_mass_above_sea 
-        
-    @property
-    def total_volume(self):
-        """Get the 'total_volume' property."""
-        return self._total_volume
-
-    @total_volume.setter
-    def total_volume(self, value):
-        """Set the 'total_volume' property."""
-        self._total_volume = round(value, 1)
-
-    @total_volume.deleter
-    def total_volume(self):
-        """Delete the 'total_volume' property."""
-        del self._total_volume 
-        
-    @property
-    def total_volume_above_sea(self):
-        """Get the 'total_volume_above_sea' property."""
-        return self._total_volume_above_sea
-
-    @total_volume.setter
-    def total_volume_above_sea(self, value):
-        """Set the 'total_volume_above_sea' property."""
-        self._total_volume_above_sea = round(value, 1)
-
-    @total_volume.deleter
-    def total_volume_above_sea(self):
-        """Delete the 'total_volume_above_sea' property."""
-        del self._total_volume_above_sea 
- 
-    @property
-    def total_area(self):
-        """Get the 'total_area' property."""
-        return self._total_area
-
-    @total_area.setter
-    def total_area(self, value):
-        """Set the 'total_area' property."""
-        self._total_area = round(value, 1)
-
-    @total_area.deleter
-    def total_area(self):
-        """Delete the 'total_area' property."""
-        del self._total_area 
-        
-    @property
-    def total_area_above_sea(self):
-        """Get the 'total_area_above_sea' property."""
-        return self._total_area_above_sea
-
-    @total_area.setter
-    def total_area_above_sea(self, value):
-        """Set the 'total_area_above_sea' property."""
-        self._total_area_above_sea = round(value, 1)
-
-    @total_area.deleter
-    def total_area_above_sea(self):
-        """Delete the 'total_area_above_sea' property."""
-        del self._total_area_above_sea
-    
-    # End of property
-    ###########################################################################
-        
-    def calc_iceberg_params(self):
-        """
-        Calculate the total mass above sea, tha volume of the iceberg
-    
-        """
-        x_len, y_len = self.lidar_data_height.shape
-        
-        cell_area = 1 # define default cell area = 1 sq.m.
-        
-        for y in range(y_len):
-            for x in range(x_len):
-                if self.radar_data_texture[y][x] >= 100:
-                    self._total_area += 1
-                    self._total_volume += self.lidar_data_height[y][x] / 10 \
-                                            * cell_area
-                    
-                    if self.lidar_data_height[y][x] > 0:
-                        self._total_area_above_sea += 1
-                        self._total_volume_above_sea += \
-                                            self.lidar_data_height[y][x] / 10
-                                            
-        if (self._total_area_above_sea / self._total_area) * 100 >= 10:
-            self._total_mass = 900 * self._total_volume 
-        self._total_mass_above_sea = 900 * self._total_volume_above_sea
-        
-        if self._total_mass < self._pullable_threshold:
-            self._berg_pullable = True
-        
-    def __str__(self):
-        return 'Total area: {0} sq.m.\
-                \nTotal area above sea: {1} sq.m.\
-                \nTotal volume: {2} m3\
-                \nTotal volume above sea: {3} m3\
-                \nTotal mass: {4} kg\
-                \nTotal mass above sea: {5} kg\
-                \nTug {6} pull the berg'\
-                .format(round(self._total_area,1), \
-                        round(self._total_area_above_sea,1),\
-                        round(self._total_volume,1), \
-                        round(self._total_volume_above_sea,1),\
-                        round(self._total_mass,1), \
-                        round(self._total_mass_above_sea,1), \
-                        ('can' if self._berg_pullable else 'cannot'))
-        
-# End of Iceberg class definition
-#==============================================================================
 
 
 #==============================================================================
@@ -272,6 +111,71 @@ def draw_result(image, icebergs):
     plt.show()
     
     #!!!!!!!! End of the method
+    
+def draw_result_multiple(image):
+                    
+    #!!!!!!!! The following resources were used in the creation of the method 
+    # https://stackoverflow.com/questions/25482876/how-to-add-legend-to-imshow-
+    # in-matplotlib
+    # https://stackoverflow.com/questions/9707676/defining-a-discrete-colormap-
+    # for-imshow-in-matplotlib/9708079
+    #!!!!!!!! Start of the method
+    
+    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
+    # the iceberg
+    ice_data_local = image
+    
+    # Get the unique values from data. In this case it will be 0 and 1
+    values = np.unique(ice_data_local.ravel())
+    
+    # Create the dictionary of unique values
+    value_description = {}
+    for v in values:
+        if v == 0: 
+            value_description[0] = 'Sea level'
+        else:
+            value_description[v] = 'Iceberg ' + str(v)
+            
+    #value_description = {0: 'Sea level', 1: 'Iceberg'}
+    
+    # Create two plot area, one for image visualisation and the second will
+    # be used for showing the result text
+    fig, ax = plt.subplots(1, 2, figsize=(8,4), sharey=True)
+        
+    # Make a color map of fixed colors, blue for the sea and grey for 
+    # the iceberg
+    cmap = colors.ListedColormap(['blue', 'grey'])
+    bounds=[0,0.5,1]
+    norm = colors.BoundaryNorm(bounds, cmap.N)
+    
+    # Plot image with predefined colors
+    im = ax[0].imshow(ice_data_local, interpolation='none', cmap=cmap, norm=norm)
+    
+    # Identify the colors from the plot. In this case it is ['blue', 'grey']
+    colors_image = [ im.cmap(im.norm(value)) for value in values]
+    
+    # Create a patch for every color 
+    patches = [mpatches.Patch(color=colors_image[i], label="{}".
+                    format(value_description[i]) ) for i in range(len(values))]
+    
+    # Put those patched as legend-handles into the legend
+    ax[0].legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, 
+      borderaxespad=0.)
+    
+    ax[0].set_title('Iceberg')
+    
+#    ax[1].text(0, 100, 'Results of image analysis of berg', bbox={'facecolor': 
+#        'white', 'pad': 10})
+    
+#    ax[1].text(0, 270, str(icebergs[0]), bbox={'facecolor': 'white', 
+#      'pad': 10})
+    
+    ax[1].axis('off')
+    
+    plt.show()
+    
+    #!!!!!!!! End of the method
+
 
 def draw_environment(environment):
     """
@@ -301,21 +205,55 @@ def read_file(file_name):
     except:
         print("Unexpected error:", sys.exc_info()[0])
         
-def write_file(file_name, result_text):    
+def write_file(file_name, icebergs):    
     # Try to write the result to the output file
     try:
         with open(file_name, 'w') as file_object:
-            file_object.write(result_text)      
+            file_object.write('Results of analysis\n\n') 
+            for berg in icebergs:
+                file_object.write(str(berg))   
+                file_object.write('\n\n')
     except IOError as err:
         print(err)
     except:
         print("Unexpected error:", sys.exc_info()[0])
         
-#def iceberg_identification(radar_data_texture):
-#    
-#    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
-#    # the iceberg
-#    ice_data = (image >= 100).astype(np.int)
+def iceberg_identification(radar_data_texture):
+
+    # The below resource was used to apply numpy.where function result to the array
+    # https://stackoverflow.com/questions/42492342/apply-function-to-result-of-numpy-where
+
+   
+    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
+    # the iceberg
+    ice_data = -(radar_data_texture >= 100).astype(np.int)
+    
+    iceberg_number = 0
+    
+    y_len, x_len = ice_data.shape
+    
+    for y in range(y_len):
+        for x in range(x_len):
+            if ice_data[y][x] < 0:
+                
+                y1 = (y - 1) if ((y - 1) >= 0) else 0
+                y2 = (y + 2) if ((y + 2) < y_len) else y_len
+                x1 = (x - 1) if ((x - 1) >= 0) else 0
+                x2 = (x + 2) if ((x + 2) < x_len) else x_len
+                
+                ice_data_slice = ice_data[y1:y2, x1:x2]
+                
+                ice_data_slice_pos = np.where(ice_data_slice > 0)
+                if len(ice_data_slice[ice_data_slice_pos]) == 0:
+                    iceberg_number +=1
+                    iceberg_number_temp = iceberg_number
+                else:
+                    iceberg_number_temp = np.max(ice_data_slice[ice_data_slice_pos])
+                    
+                ice_data_slice_neg = np.where(ice_data_slice < 0)
+                ice_data_slice[ice_data_slice_neg] = iceberg_number_temp
+                
+    return ice_data, iceberg_number                
     
 
 # End of Function definitions
@@ -348,19 +286,26 @@ output_file_path = 'output/results.txt'
 # Read input files and assign texture and height info to the variables
 lidar_data_height = read_file(lidar_data_file_path)
 radar_data_texture = read_file(radar_data_file_path)
-    
+ 
+
+
+                
+   
 # Draw input image data
 #draw_environment(radar_data_texture)
 #draw_environment(lidar_data_height)
 
 # Identify the mupltiple icebergs from the radar image
-iceberg_identification(radar_data_texture)
+ice_data, ice_count = iceberg_identification(radar_data_texture)
 
 # Create the Iceberg object from the input  image files
-icebergs.append(Iceberg(radar_data_texture, lidar_data_height))
+for ice_no in range(1, ice_count +1):
+    icebergs.append(icebergstructure.Iceberg(ice_data, lidar_data_height, ice_no))
 
 # Draw result in the canvas
-draw_result(radar_data_texture, icebergs)
+#draw_result(radar_data_texture, icebergs)
+draw_result_multiple(ice_data)
+print(ice_count)
 
 # Write the results of the analysis to text file
-write_file(output_file_path, str(icebergs[0]))
+write_file(output_file_path, icebergs)

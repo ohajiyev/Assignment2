@@ -1,7 +1,47 @@
-Total area: 10829 sq.m.                
-Total area above sea: 10829 sq.m.                
-Total volume: 156744.0 m3                
-Total volume above sea: 156744.0 m3                
-Total mass: 141069600.0 kg                
-Total mass above sea: 141069600.0 kg                
+Results of analysis
+
+Iceberg no: 1                
+Total area: 144 sq.m.                
+Total area above sea: 144 sq.m.                
+Total volume: 3671.6 m3                
+Total volume above sea: 3671.6 m3                
+Total mass: 3304440.0 kg                
+Total mass above sea: 3304440.0 kg                
+Tug can pull the berg
+
+Iceberg no: 2                
+Total area: 552 sq.m.                
+Total area above sea: 552 sq.m.                
+Total volume: 5851.3 m3                
+Total volume above sea: 5851.3 m3                
+Total mass: 5266170.0 kg                
+Total mass above sea: 5266170.0 kg                
+Tug can pull the berg
+
+Iceberg no: 3                
+Total area: 961 sq.m.                
+Total area above sea: 961 sq.m.                
+Total volume: 14415.5 m3                
+Total volume above sea: 14415.5 m3                
+Total mass: 12973950.0 kg                
+Total mass above sea: 12973950.0 kg                
+Tug can pull the berg
+
+Iceberg no: 4                
+Total area: 6004 sq.m.                
+Total area above sea: 6004 sq.m.                
+Total volume: 61841.8 m3                
+Total volume above sea: 61841.8 m3                
+Total mass: 55657620.0 kg                
+Total mass above sea: 55657620.0 kg                
 Tug cannot pull the berg
+
+Iceberg no: 5                
+Total area: 3168 sq.m.                
+Total area above sea: 3168 sq.m.                
+Total volume: 70963.8 m3                
+Total volume above sea: 70963.8 m3                
+Total mass: 63867420.0 kg                
+Total mass above sea: 63867420.0 kg                
+Tug cannot pull the berg
+
