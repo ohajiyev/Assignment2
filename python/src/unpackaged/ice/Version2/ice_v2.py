@@ -49,109 +49,74 @@ import icebergstructure
 #==============================================================================
 
 
-
-
 #==============================================================================
 # Function definitions
-                
-                
-def draw_result(image, icebergs):
+
+def on_hover(event, icebergs, ice_data, ax_result, ice_count):
+    if event.inaxes is not None:
+        if event.inaxes.title.get_text() == 'Analysed Icebergs':
+            ice_data_value = ice_data[int(round(event.ydata))][
+                    int(round(event.xdata))]
+            if ice_data_value in range (1, ice_count+1):
+                ax_result.clear()
+                text_result = 'Results of image analysis of berg'
+                text_result += '\nHover over the icebergs to view characteristics'
+                ax_result.text(0, 115, text_result, 
+                             bbox={'facecolor': 'white', 'pad': 5})
+                ax_result.text(0, 285, str(icebergs[ice_data_value-1]), 
+                             bbox={'facecolor': 'white', 'pad': 5})
+                ax_result.axis('off')
+                plt.gcf().canvas.draw_idle()
+    
+def draw_result_multiple(ice_data, icebergs, \
+                         radar_data_texture, lidar_data_height):
                     
     #!!!!!!!! The following resources were used in the creation of the method 
     # https://stackoverflow.com/questions/25482876/how-to-add-legend-to-imshow-
     # in-matplotlib
     # https://stackoverflow.com/questions/9707676/defining-a-discrete-colormap-
     # for-imshow-in-matplotlib/9708079
-    #!!!!!!!! Start of the method
     
-    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
-    # the iceberg
-    ice_data = (image >= 100).astype(np.int)
+    # Create a copy of ice_data to modify it and assign values 1 and 2.
+    # 1 means that the berg is pullable and 2 is not pullable
+    ice_data_pullable = np.copy(ice_data)
     
-    # Get the unique values from data. In this case it will be 0 and 1
-    values = np.unique(ice_data.ravel())
-    
-    # Create the dictionary of unique values
-    value_description = {0: 'Sea level', 1: 'Iceberg'}
-    
-    # Create two plot area, one for image visualisation and the second will
-    # be used for showing the result text
-    fig, ax = plt.subplots(1, 2, figsize=(8,4), sharey=True)
-        
-    # Make a color map of fixed colors, blue for the sea and grey for 
-    # the iceberg
-    cmap = colors.ListedColormap(['blue', 'grey'])
-    bounds=[0,0.5,1]
-    norm = colors.BoundaryNorm(bounds, cmap.N)
-    
-    # Plot image with predefined colors
-    im = ax[0].imshow(ice_data, interpolation='none', cmap=cmap, norm=norm)
-    
-    # Identify the colors from the plot. In this case it is ['blue', 'grey']
-    colors_image = [ im.cmap(im.norm(value)) for value in values]
-    
-    # Create a patch for every color 
-    patches = [mpatches.Patch(color=colors_image[i], label="{}".
-                    format(value_description[i]) ) for i in range(len(values))]
-    
-    # Put those patched as legend-handles into the legend
-    ax[0].legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, 
-      borderaxespad=0.)
-    
-    ax[0].set_title('Iceberg')
-    
-    ax[1].text(0, 100, 'Results of image analysis of berg', bbox={'facecolor': 
-        'white', 'pad': 10})
-    
-    ax[1].text(0, 270, str(icebergs[0]), bbox={'facecolor': 'white', 
-      'pad': 10})
-    
-    ax[1].axis('off')
-    
-    plt.show()
-    
-    #!!!!!!!! End of the method
-    
-def draw_result_multiple(image):
-                    
-    #!!!!!!!! The following resources were used in the creation of the method 
-    # https://stackoverflow.com/questions/25482876/how-to-add-legend-to-imshow-
-    # in-matplotlib
-    # https://stackoverflow.com/questions/9707676/defining-a-discrete-colormap-
-    # for-imshow-in-matplotlib/9708079
-    #!!!!!!!! Start of the method
-    
-    # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
-    # the iceberg
-    ice_data_local = image
-    
-    # Get the unique values from data. In this case it will be 0 and 1
-    values = np.unique(ice_data_local.ravel())
-    
-    # Create the dictionary of unique values
-    value_description = {}
-    for v in values:
-        if v == 0: 
-            value_description[0] = 'Sea level'
+    # Create the variable with 0, 1 and 2. 0 refer to the sea level, 1 to 
+    # the pullable iceberg and 2 to the iceberg which cannot be pulled
+    for berg in icebergs:
+        ice_data_slice_temp = np.where(ice_data == berg.ice_no)
+        if berg.berg_pullable:
+            ice_data_pullable[ice_data_slice_temp] = 1
         else:
-            value_description[v] = 'Iceberg ' + str(v)
+            ice_data_pullable[ice_data_slice_temp] = 2
             
-    #value_description = {0: 'Sea level', 1: 'Iceberg'}
+    # Get the unique values from data. In this case it will be 0, 1 nad 2
+    values = np.unique(ice_data_pullable.ravel())
+    
+    # Create the dictionary of unique values           
+    value_description = {0: 'Sea level', 1: 'Iceberg pullable', \
+                         2: 'Iceberg not pullable',}
     
     # Create two plot area, one for image visualisation and the second will
     # be used for showing the result text
-    fig, ax = plt.subplots(1, 2, figsize=(8,4), sharey=True)
+    fig, ax = plt.subplots(2, 2, figsize=(8,8), sharey=True)
+    
+    ax[0, 0].imshow(radar_data_texture)
+    ax[0, 0].set_title('Input Radar Image')
+    ax[0, 1].imshow(lidar_data_height)
+    ax[0, 1].set_title('Input Lidar Image')
         
     # Make a color map of fixed colors, blue for the sea and grey for 
     # the iceberg
-    cmap = colors.ListedColormap(['blue', 'grey'])
-    bounds=[0,0.5,1]
+    cmap = colors.ListedColormap(['blue', 'green', 'red'])
+    bounds=[0,0.5,1,1.5,2]
     norm = colors.BoundaryNorm(bounds, cmap.N)
     
     # Plot image with predefined colors
-    im = ax[0].imshow(ice_data_local, interpolation='none', cmap=cmap, norm=norm)
+    im = ax[1, 0].imshow(ice_data_pullable, interpolation='none', cmap=cmap, \
+           norm=norm)
     
-    # Identify the colors from the plot. In this case it is ['blue', 'grey']
+    # Identify the colors from the plot. In this case it is blue, gren and red
     colors_image = [ im.cmap(im.norm(value)) for value in values]
     
     # Create a patch for every color 
@@ -159,38 +124,28 @@ def draw_result_multiple(image):
                     format(value_description[i]) ) for i in range(len(values))]
     
     # Put those patched as legend-handles into the legend
-    ax[0].legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, 
+    ax[1, 0].legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, 
       borderaxespad=0.)
     
-    ax[0].set_title('Iceberg')
+    ax[1, 0].set_title('Analysed Icebergs')
     
-#    ax[1].text(0, 100, 'Results of image analysis of berg', bbox={'facecolor': 
-#        'white', 'pad': 10})
+    text_result = 'Results of image analysis of berg'
+    text_result += '\nHover over the icebergs to view characteristics'
     
-#    ax[1].text(0, 270, str(icebergs[0]), bbox={'facecolor': 'white', 
-#      'pad': 10})
+    ax[1, 1].text(0, 115, text_result, bbox={'facecolor': 'white', 'pad': 5})
     
-    ax[1].axis('off')
+    ax[1, 1].text(0, 285, str(icebergs[0]), bbox={'facecolor': 'white', 
+      'pad': 5})
+    
+    ax[1, 1].axis('off')
+    
+    ice_count = len(icebergs)
     
     plt.show()
     
-    #!!!!!!!! End of the method
-
-
-def draw_environment(environment):
-    """
-    Draw environment
-
-    Arguments:
-    environment -- list variable contains the data of iceberg environment
-                   (no default)
-
-    Returns:
-    Plot of environment variable.
-    """
-    plt.xlim(0, 299)
-    plt.ylim(299, 0)
-    plt.imshow(environment)
+    cid = fig.canvas.mpl_connect('motion_notify_event', lambda event: 
+        on_hover(event, icebergs, ice_data, ax[1, 1], ice_count))
+    
     plt.show()
     
 def read_file(file_name):    
@@ -220,8 +175,10 @@ def write_file(file_name, icebergs):
         
 def iceberg_identification(radar_data_texture):
 
-    # The below resource was used to apply numpy.where function result to the array
-    # https://stackoverflow.com/questions/42492342/apply-function-to-result-of-numpy-where
+    # The below resource was used to apply numpy.where function result to the 
+    # array
+    # https://stackoverflow.com/questions/42492342/apply-function-to-result-of-
+    # numpy-where
 
    
     # Create the variable with 0 and 1. 0 refer to the sea level, 1 to 
@@ -248,7 +205,8 @@ def iceberg_identification(radar_data_texture):
                     iceberg_number +=1
                     iceberg_number_temp = iceberg_number
                 else:
-                    iceberg_number_temp = np.max(ice_data_slice[ice_data_slice_pos])
+                    iceberg_number_temp = np.max(ice_data_slice[\
+                                                           ice_data_slice_pos])
                     
                 ice_data_slice_neg = np.where(ice_data_slice < 0)
                 ice_data_slice[ice_data_slice_neg] = iceberg_number_temp
@@ -283,29 +241,27 @@ output_file_path = 'output/results.txt'
 # End of Create variables
 #==============================================================================
 
+
+# Main part of the code
+#==============================================================================
+
 # Read input files and assign texture and height info to the variables
 lidar_data_height = read_file(lidar_data_file_path)
 radar_data_texture = read_file(radar_data_file_path)
- 
-
-
-                
-   
-# Draw input image data
-#draw_environment(radar_data_texture)
-#draw_environment(lidar_data_height)
 
 # Identify the mupltiple icebergs from the radar image
 ice_data, ice_count = iceberg_identification(radar_data_texture)
 
 # Create the Iceberg object from the input  image files
-for ice_no in range(1, ice_count +1):
-    icebergs.append(icebergstructure.Iceberg(ice_data, lidar_data_height, ice_no))
+for ice_no in range(1, ice_count + 1):
+    icebergs.append(icebergstructure.Iceberg(ice_data, lidar_data_height, \
+                                             ice_no))
 
 # Draw result in the canvas
-#draw_result(radar_data_texture, icebergs)
-draw_result_multiple(ice_data)
-print(ice_count)
+draw_result_multiple(ice_data, icebergs, radar_data_texture, lidar_data_height)
 
 # Write the results of the analysis to text file
 write_file(output_file_path, icebergs)
+
+# End of Main part of the code
+#==============================================================================

@@ -30,6 +30,21 @@ class Iceberg():
     ###########################################################################
 
     @property
+    def berg_pullable(self):
+        """Get the 'berg_pullable' property."""
+        return self._berg_pullable
+
+    @berg_pullable.setter
+    def berg_pullable(self, value):
+        """Set the 'berg_pullable' property."""
+        self._berg_pullable = round(value, 1)
+
+    @berg_pullable.deleter
+    def berg_pullable(self):
+        """Delete the 'berg_pullable' property."""
+        del self._berg_pullable    
+        
+    @property
     def ice_no(self):
         """Get the 'ice_no' property."""
         return self._ice_no
@@ -156,7 +171,7 @@ class Iceberg():
                     if self.lidar_data_height[y][x] > 0:
                         self._total_area_above_sea += 1
                         self._total_volume_above_sea += \
-                                            self.lidar_data_height[y][x] / 10
+                                  self.lidar_data_height[y][x] / 10 * cell_area
                                             
         if (self._total_area_above_sea / self._total_area) * 100 >= 10:
             self._total_mass = 900 * self._total_volume 
