@@ -169,7 +169,7 @@ class Iceberg():
         Calculate the total mass above sea, tha volume of the iceberg
     
         """
-        x_len, y_len = self.lidar_data_height.shape
+        y_len, x_len = self.lidar_data_height.shape
         
         cell_area = 1 # define default cell area = 1 sq.m.
         
