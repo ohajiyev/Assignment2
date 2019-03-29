@@ -1,35 +1,82 @@
 # -*- coding: utf-8 -*-
 """
-Last updated on Mar 29, 2019
+Date Last Updated: 
+    Mar 29, 2019
 
-@author: Orkhan Hajiyev (gy17oh)
+Author: 
+    Orkhan Hajiyev (gy17oh)
 
-Title: Assignment 2. Module GEOG5991M
-       White Star Line Project
+Title: 
+    Assignment 2. Module GEOG5991M
+    White Star Line Project
 
-Version: 2.0
-The version was built to analyse MULTIPLE iceberg images.
-It is possible to use single iceberg images as an input to run the code
+Version: 
+    2.0
 
-The purpuse of the script is to implement the requirements of the 
-Assignment 2 of the Module GEOG5991M.
-
-White Star Line was selected as the project to satisfy the assignment's
-description. The link to the project's problem definition:
+Purpose: 
+    To implement the requirements of the Assignment 2 of the Module GEOG5991M.
+    The version was built to analyse MULTIPLE iceberg images.
+    
+    White Star Line was selected as the project to satisfy the assignment's
+    description. The link to the project's problem definition:
     https://www.geog.leeds.ac.uk/courses/computing/
     study/core-python-odl/assessment2/ice.html
     
-Copyright (c) 2019 Orkhan Hajiyev
-Lisence under MIT License
-License link: https://github.com/ohajiyev/Assignment2/blob/master/LICENSE.md
+License: 
+    Copyright (c) 2019 Orkhan Hajiyev
+    Lisence under MIT License
+    License link: 
+        https://github.com/ohajiyev/Assignment2/blob/master/LICENSE.md
        
-Link to Github: https://github.com/ohajiyev/Assignment2
-
-Instructions to run the script is written in 
+Github Repo Link: 
+    https://github.com/ohajiyev/Assignment2
     
-Python version: 3.7 (Python 3.7.1 64-bit | Qt 5.9.6 | PyQt5 5.9.2 | Windows 10)
+Code Folder Link:
+    https://github.com/ohajiyev/Assignment2/tree/master/python/src/unpackaged/
+    ice/Version2
 
-The code was written in Spyder Version 3.3.2
+Zip file link:
+    https://github.com/ohajiyev/Assignment2/tree/master/python/src/unpackaged/
+    ice/Version2/assignment2.zip
+
+Instructions to run:
+    Download 'assignment2.zip' file and extract to the folder.
+    The folder should contain the following files and folders:
+        'ice_v2.py' - main code
+        'icebergstructure.py' - Iceberg class definiton
+        'input' - folder which contains input images 'white2.lidar' and 
+                  'white2.radar'
+        'input/white2.lidar' - lidar images of an area of sea with a multiple 
+                               bergs with height data in it
+        'input/white2.radar' - radar images of an area of sea with a multiple 
+                               bergs with texture data in it
+        'output' - folder which is output folder for result text file 
+                   ('result.txt) which is created as a result of the run
+    Software requirements:
+        Anaconda3 (64bit):
+            Python 3.7
+            Spyder 3.3.2
+            Jupiter Notebook
+            Anaconda prompt
+        
+    The code can be run in Anaconda command line, Spyder and Jupyter notebook.
+        Anaconda cmd: 
+            'python ice_v2.py'
+        Spyder: 
+            1. Open 'ice_v2.py
+            2. Ensure that IPython console is activated
+            3. Run '#%matplotlib qt5' command in IPython console to interact
+               with interface.
+            4. Press 'F5' button or 'Run' from the  menu to run the code
+    
+    Please see Readme.md file in repo for the detailed instructions:
+        https://github.com/ohajiyev/Assignment2/blob/master/README.md
+    
+Python version: 
+    3.7 (Python 3.7.1 64-bit | Qt 5.9.6 | PyQt5 5.9.2 | Windows 10)
+
+Coding Tool:
+    Spyder Version 3.3.2
 
 !!! Important note: some part of the code may be copied and modified from 
 !!! different sources which are explitely shown in the comments below
@@ -45,7 +92,7 @@ from matplotlib import colors
 import matplotlib.patches as mpatches
 import numpy as np
 import icebergstructure
-#%matplotlib qt
+#%matplotlib qt5
 
 # End of Import modules
 #==============================================================================
@@ -259,12 +306,6 @@ def main():
     # empty list of Iceberg objects
     icebergs = [] 
     
-    # Uncommenting of single input images and commenting of multiple berg 
-    # images allow to test the code based on single iceberg images
-    # Define input file paths for single bergs
-    #lidar_data_file_path = 'input/white1.lidar'
-    #radar_data_file_path = 'input/white1.radar'
-    
     # Define input file paths for multiple bergs
     lidar_data_file_path = 'input/white2.lidar'
     radar_data_file_path = 'input/white2.radar'
@@ -286,7 +327,9 @@ def main():
     # Identify the mupltiple icebergs and count from the radar image
     ice_data, ice_count = iceberg_identification(radar_data_texture)
     
-    # Create the Iceberg objects from the input  image files
+    # Create the Iceberg objects from the input image files
+    # On initialisation stage, the parameters, such as mass and volume of
+    # the iceberg is calculated
     for ice_no in range(1, ice_count + 1):
         icebergs.append(icebergstructure.Iceberg(ice_data, lidar_data_height,
                                                  ice_no))
