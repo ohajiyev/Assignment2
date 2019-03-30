@@ -15,7 +15,7 @@ Version:
 
 Purpose: 
     To implement the requirements of the Assignment 2 of the Module GEOG5991M.
-    The version was built to analyse MULTIPLE iceberg images.
+    The version was built to analyse the images with MULTIPLE icebergs.
     
     White Star Line was selected as the project to satisfy the assignment's
     description. The link to the project's problem definition:
