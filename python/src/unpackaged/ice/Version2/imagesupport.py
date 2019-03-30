@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Date Last Updated: Mar 29, 2019
+Date Last Updated: Mar 30, 2019
 
 Author: Orkhan Hajiyev (gy17oh)
 
-Title: Iceberg class
+Title: ImageHandle class
 
 Purpose: 
-    Iceberg class contains iceberg characteristics which are calculated
-    during the initialisation of the objects
+    ImageHandle class contains the bunch of functions to support with the 
+    manupilation, processing and visualisation of image files and datasets.
     
 License: 
     Copyright (c) 2019 Orkhan Hajiyev
@@ -132,7 +132,7 @@ class ImageHandle():
         # https://stackoverflow.com/questions/25482876/how-to-add-legend-to-
         # imshow-in-matplotlib
         # https://stackoverflow.com/questions/9707676/defining-a-discrete-
-        # colormap-for-imshow-in-matplotlib/9708079
+        # colormap-for-imshow-in-matplotlib/9708079l
         
         # Classification of icebergs into pullable and not. Assign values 1 
         # and 2. 1 means that the berg is pullable and 2 is not pullable. 
@@ -224,22 +224,6 @@ class ImageHandle():
         try:
             image_data = np.loadtxt(file_name, delimiter = (','))
             return image_data     
-        except IOError as err:
-            print(err)
-        except:
-            print("Unexpected error:", sys.exc_info()[0])
-            
-    def write_file(self, file_name, icebergs):    
-        """ Write result of analysis into output file """
-        
-        # Try to write the result to the output file
-        # Result is the list of the icebergs with calculated parameters
-        try:
-            with open(file_name, 'w') as file_object:
-                file_object.write('Results of analysis\n\n') 
-                for berg in icebergs:
-                    file_object.write(str(berg))   
-                    file_object.write('\n\n')
         except IOError as err:
             print(err)
         except:

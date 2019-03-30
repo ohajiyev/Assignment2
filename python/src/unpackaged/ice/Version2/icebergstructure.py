@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Date Last Updated: Mar 29, 2019
+Date Last Updated: Mar 30, 2019
 
 Author: Orkhan Hajiyev (gy17oh)
 
@@ -34,7 +34,7 @@ class Iceberg():
         self.iceberg_data = iceberg_data
         self.lidar_data_height = lidar_data_height
         self._iceberg_no = iceberg_no
-        self._pullable_threshold = 36000000 # kg
+        self._pullable_threshold = 36000000.0 # kg
         self._berg_pullable = False
         
         self.calc_iceberg_params()
@@ -50,12 +50,7 @@ class Iceberg():
     @berg_pullable.setter
     def berg_pullable(self, value):
         """Set the 'berg_pullable' property."""
-        self._berg_pullable = round(value, 1)
-
-    @berg_pullable.deleter
-    def berg_pullable(self):
-        """Delete the 'berg_pullable' property."""
-        del self._berg_pullable    
+        self._berg_pullable = value 
         
     @property
     def iceberg_no(self):
@@ -66,11 +61,6 @@ class Iceberg():
     def iceberg_no(self, value):
         """Set the 'iceberg_no' property."""
         self._iceberg_no = round(value, 1)
-
-    @iceberg_no.deleter
-    def iceberg_no(self):
-        """Delete the 'iceberg_no' property."""
-        del self._iceberg_no    
     
     @property
     def total_mass(self):
@@ -82,11 +72,6 @@ class Iceberg():
         """Set the 'total_mass' property."""
         self._total_mass = round(value, 1)
 
-    @total_mass.deleter
-    def total_mass(self):
-        """Delete the 'total_mass' property."""
-        del self._total_mass    
-
     @property
     def total_mass_above_sea(self):
         """Get the 'total_mass_above_sea' property."""
@@ -96,11 +81,6 @@ class Iceberg():
     def total_mass_above_sea(self, value):
         """Set the 'total_mass_above_sea' property."""
         self._total_mass_above_sea = round(value, 1)
-
-    @total_mass_above_sea.deleter
-    def total_mass_above_sea(self):
-        """Delete the 'total_mass_above_sea' property."""
-        del self._total_mass_above_sea 
         
     @property
     def total_volume(self):
@@ -111,11 +91,6 @@ class Iceberg():
     def total_volume(self, value):
         """Set the 'total_volume' property."""
         self._total_volume = round(value, 1)
-
-    @total_volume.deleter
-    def total_volume(self):
-        """Delete the 'total_volume' property."""
-        del self._total_volume 
         
     @property
     def total_volume_above_sea(self):
@@ -126,11 +101,6 @@ class Iceberg():
     def total_volume_above_sea(self, value):
         """Set the 'total_volume_above_sea' property."""
         self._total_volume_above_sea = round(value, 1)
-
-    @total_volume.deleter
-    def total_volume_above_sea(self):
-        """Delete the 'total_volume_above_sea' property."""
-        del self._total_volume_above_sea 
  
     @property
     def total_area(self):
@@ -141,11 +111,6 @@ class Iceberg():
     def total_area(self, value):
         """Set the 'total_area' property."""
         self._total_area = round(value, 1)
-
-    @total_area.deleter
-    def total_area(self):
-        """Delete the 'total_area' property."""
-        del self._total_area 
         
     @property
     def total_area_above_sea(self):
@@ -156,11 +121,6 @@ class Iceberg():
     def total_area_above_sea(self, value):
         """Set the 'total_area_above_sea' property."""
         self._total_area_above_sea = round(value, 1)
-
-    @total_area.deleter
-    def total_area_above_sea(self):
-        """Delete the 'total_area_above_sea' property."""
-        del self._total_area_above_sea
     
     # End of property
     ###########################################################################

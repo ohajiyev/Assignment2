@@ -22,6 +22,7 @@ INSTRUCTIONS TO RUN:
     minimum:
         'ice_v2.py' - main code to run from command prompt
         'icebergstructure.py' - Iceberg class definiton
+        'imagesupport.py' - ImageHandle class definiton
         'ice2_notebook.ipynb' - Jupyter Notebook file
         'input' - folder which contains input images 'white2.lidar' and 
                   'white2.radar'
